@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Inter:wght@400;500&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ================= BACKGROUND VIDEO ================= */
+
+#bgVideo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  filter: brightness(0.85) saturate(1.05);
+  z-index: -10;
+}
+
+/* ================= SOFT OVERLAY ================= */
+
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 230, 240, 0.6),
+    rgba(255, 210, 225, 0.5)
+  );
+  backdrop-filter: blur(6px);
+  z-index: -8;
+}
+
+/* ================= PHOTO LAYER ================= */
+
+#photo-layer {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -5;
+}
+
+.photo {
+  position: absolute;
+  width: clamp(80px, 18vw, 120px);
+  border-radius: 20px;
+  opacity: 0;
+  animation: floatPhoto 10s ease forwards;
+  box-shadow: 0 15px 40px rgba(255, 150, 170, 0.2);
+}
+
+@keyframes floatPhoto {
+  0%   { opacity: 0; transform: translateY(0px) scale(0.95); }
+  20%  { opacity: 0.9; }
+  80%  { opacity: 0.9; transform: translateY(-15px); }
+  100% { opacity: 0; transform: translateY(-25px); }
+}
+
+/* ================= HEART LAYER ================= */
+
+#heart-layer {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -6;
+}
+
+.heart {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: rgba(255, 140, 170, 0.4);
+  transform: rotate(45deg);
+  animation: floatHeart 14s linear infinite;
+}
+
+.heart::before,
+.heart::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: inherit;
+  border-radius: 50%;
+}
+
+.heart::before { top: -8px; left: 0; }
+.heart::after  { left: -8px; top: 0; }
+
+@keyframes floatHeart {
+  0% { transform: translateY(100vh) rotate(45deg); opacity: 0; }
+  20% { opacity: 0.6; }
+  100% { transform: translateY(-20vh) rotate(45deg); opacity: 0; }
+}
+
+/* ================= MAIN CARD ================= */
+
+.card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  max-width: 380px;
+  transform: translate(-50%, -50%);
+  padding: 30px 25px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px);
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(255, 150, 170, 0.25);
+  z-index: 5;
+
+  display: flex;
+  flex-direction: column;
+
+  max-height: 260px;
+  transition: height 0.5s ease,
+              box-shadow 0.4s ease,
+              transform 0.4s ease;
+}
+
+.card.expanded {
+  height: 70vh;
+  max-height: 70vh;
+  box-shadow: 0 25px 70px rgba(255, 120, 150, 0.35);
+  transform: translate(-50%, -50%) scale(1.02);
+}
+
+/* Bottom fade hint */
+.card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background: linear-gradient(
+    to top,
+    rgba(255,255,255,0.7),
+    transparent
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.card.expanded::after {
+  opacity: 1;
+}
+
+/* ================= TYPOGRAPHY ================= */
+
+.card h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  color: #ff6f91;
+  margin-bottom: 12px;
+}
+
+.sub {
+  opacity: 0.75;
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+
+/* ================= BUTTON ================= */
+
+#loveBtn {
+  padding: 12px 30px;
+  border-radius: 30px;
+  border: none;
+  background: linear-gradient(135deg, #ff8fab, #ffcad4);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(255, 120, 150, 0.4);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#loveBtn:hover {
+  transform: translateY(-2px);
+}
+
+.card.expanded #loveBtn {
+  opacity: 0;
+  transform: scale(0.9);
+  pointer-events: none;
+}
+
+/* ================= SCROLL AREA ================= */
+
+.scroll-area {
+  flex: 1;
+  margin-top: 15px;
+  overflow-y: auto;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+}
+
+.card.expanded .scroll-area {
+  opacity: 1;
+}
+
+.scroll-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll-area::-webkit-scrollbar-thumb {
+  background: rgba(255, 120, 150, 0.4);
+  border-radius: 10px;
+}
+
+/* ================= MESSAGE ================= */
+
+#message {
+  opacity: 0;
+  transform: translateY(15px);
+  transition: 0.6s ease;
+  line-height: 1.7;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+#message.show {
+  opacity: 1;
+  transform: translateY(0);
+}
