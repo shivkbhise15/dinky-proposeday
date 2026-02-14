@@ -1,80 +1,92 @@
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
 
-    // Button
-    document.getElementById("loveBtn").addEventListener("click", () => {
-  document.querySelector(".card").classList.add("expanded");
-  document.getElementById("message").classList.add("show");
-  document.getElementById("loveBtn").style.display = "none";
-});
+  /* ================= VIDEO AUTOPLAY FIX ================= */
 
+  const video = document.getElementById("bgVideo");
 
-    // Photos
-    const photos = [
-        "photos/pic1.jpg",
-        "photos/pic2.jpg",
-        "photos/pic3.jpg"
-    ];
+  if (video) {
+    video.muted = true;
+    video.play().catch(() => {
+      console.log("Autoplay prevented by browser");
+    });
+  }
 
-    const photoLayer = document.getElementById("photo-layer");
+  /* ================= CARD INTERACTION ================= */
 
-    function spawnPhoto() {
-        const img = document.createElement("img");
-        img.src = photos[Math.floor(Math.random() * photos.length)];
-        img.classList.add("photo");
+  const card = document.querySelector(".card");
+  const button = document.getElementById("loveBtn");
+  const message = document.getElementById("message");
 
-        const card = document.querySelector(".card");
-        const rect = card.getBoundingClientRect();
+  button.addEventListener("click", () => {
+    card.classList.add("expanded");
+    message.classList.add("show");
+  });
 
-        let x, y;
-        const padding = 40;
+  /* ================= FLOATING PHOTOS ================= */
 
-        do {
-            const edgeBias = Math.random();
+  const photos = [
+    "photos/pic1.jpg",
+    "photos/pic2.jpg",
+    "photos/pic3.jpg"
+  ];
 
-            if (edgeBias < 0.5) {
-                // left side
-                x = Math.random() * (window.innerWidth * 0.25);
-            } else {
-                // right side
-                x = window.innerWidth * 0.75 +
-                    Math.random() * (window.innerWidth * 0.25);
-            }
+  const photoLayer = document.getElementById("photo-layer");
 
-            y = Math.random() * (window.innerHeight - 180);
+  function spawnPhoto() {
+    const img = document.createElement("img");
+    img.src = photos[Math.floor(Math.random() * photos.length)];
+    img.classList.add("photo");
 
-        } while (
-            x > rect.left - padding &&
-            x < rect.right + padding &&
-            y > rect.top - padding &&
-            y < rect.bottom + padding
-        );
+    const cardRect = card.getBoundingClientRect();
+    const padding = 40;
 
-        img.style.left = x + "px";
-        img.style.top = y + "px";
+    let x, y;
 
-        photoLayer.appendChild(img);
+    do {
+      const edgeBias = Math.random();
 
-        setTimeout(() => img.remove(), 9000);
-    }
+      if (edgeBias < 0.5) {
+        x = Math.random() * (window.innerWidth * 0.25);
+      } else {
+        x = window.innerWidth * 0.75 +
+            Math.random() * (window.innerWidth * 0.25);
+      }
 
+      y = Math.random() * (window.innerHeight - 180);
 
-    setInterval(spawnPhoto, 2500);
+    } while (
+      x > cardRect.left - padding &&
+      x < cardRect.right + padding &&
+      y > cardRect.top - padding &&
+      y < cardRect.bottom + padding
+    );
 
-    // Hearts
-    const heartLayer = document.getElementById("heart-layer");
+    img.style.left = x + "px";
+    img.style.top = y + "px";
 
-    function spawnHeart() {
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
+    photoLayer.appendChild(img);
 
-        heart.style.left = Math.random() * window.innerWidth + "px";
-        heart.style.animationDuration = 10 + Math.random() * 8 + "s";
+    setTimeout(() => img.remove(), 10000);
+  }
 
-        heartLayer.appendChild(heart);
+  setInterval(spawnPhoto, 2500);
 
-        setTimeout(() => heart.remove(), 15000);
-    }
+  /* ================= FLOATING HEARTS ================= */
 
-    setInterval(spawnHeart, 1200);
+  const heartLayer = document.getElementById("heart-layer");
+
+  function spawnHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.animationDuration = 10 + Math.random() * 8 + "s";
+
+    heartLayer.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 15000);
+  }
+
+  setInterval(spawnHeart, 1200);
 
 });
